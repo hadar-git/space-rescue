@@ -1,3 +1,32 @@
+
+body {
+    margin: 0;
+    padding: 0;
+    /* החליפי את הנתיב לשם הקובץ השמור שלך */
+    background-image: linear-gradient(rgba(0, 0, 0, 0.6), rgba(0, 0, 0, 0.6)), url('../assets/images/spaceShip.jpg');
+    background-size: cover;
+    background-position: center;
+    background-attachment: fixed;
+    font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    color: white;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+}
+
+/* הוספת טשטוש קל לאזור התוכן כדי שהטקסט יבלוט */
+main#gameBoard {
+    background: rgba(26, 26, 46, 0.8); /* רקע כהה חצי שקוף */
+    backdrop-filter: blur(5px); /* אפקט זכוכית מט */
+    margin: 20px auto;
+    padding: 20px;
+    border-radius: 15px;
+    border: 1px solid rgba(0, 210, 255, 0.3);
+    max-width: 600px;
+    width: 90%;
+}
+
+
 /* עיצוב כללי של המודאל (המסך המכסה) */
 .modal {
     display: none; /* מוסתר כברירת מחדל */
@@ -13,7 +42,7 @@
 }
 
 /* הצגת מודאל הפתיחה ספציפית בטעינה */
-#startModal {
+#startModal { 
     display: flex;
 }
 
@@ -105,7 +134,7 @@ header {
     padding: 0;
     max-height: 200px;
     overflow-y: auto;
-    color: #000000;
+    color: #faeaea;
 }
 
 #historyList li {
