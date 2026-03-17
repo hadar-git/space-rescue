@@ -64,3 +64,90 @@ const renderButtons = () => {
     }
 };
 
+
+const handleInput = (num) => {
+    if (!gameState.isGameActive) return;
+
+    currentGuess.push(num);
+    
+    if (currentGuess.length === gameState.difficulty) {
+        processGuess([...currentGuess]);
+        currentGuess = [];
+    }
+};
+
+const processGuess = (guess) => {
+    gameState.attempts++;
+    const result = checkGuess(gameState.secretCode, guess);
+    
+    // בונוס/עונש זמן (הטוויסט המלחיץ!)
+    if (result.bulls > 0) {
+        gameState.timeLeft += (result.bulls * 2); 
+    } else {
+        gameState.timeLeft -= 3;
+    }
+
+    const history = document.getElementById('historyList');
+    const li = document.createElement('li');
+    
+    // שימוש ב-textContent במקום innerHTML - הכי בטוח שיש
+    li.textContent = `ניחוש: ${guess.join('')} | בול: ${result.bulls}, פגיעה: ${result.cows}`;
+    
+    // הוספה לראש הרשימה
+    history.prepend(li);
+    
+    document.getElementById('attempts').textContent = gameState.attempts;
+
+    if (result.bulls === gameState.difficulty) {
+        winGame();
+    }
+};
+
+const winGame = () => {
+    gameState.isGameActive = false; 
+    clearInterval(gameState.timerInterval);
+    document.getElementById('winModal').style.display = 'flex';
+};
+
+const nextLevel = () => {
+    gameState.currentLevel++;
+    gameState.difficulty++; 
+    gameState.attempts = 0;
+    gameState.timeLeft = 60;
+    
+    document.getElementById('levelDisplay').textContent = gameState.currentLevel;
+    document.getElementById('attempts').textContent = "0";
+    
+    // ניקוי היסטוריה בטוח
+    const history = document.getElementById('historyList');
+    while (history.firstChild) {
+        history.removeChild(history.firstChild);
+    }
+    
+    startGame(); 
+};
+
+const startTimer = () => {
+    if (gameState.timerInterval) clearInterval(gameState.timerInterval);
+
+    const timerDisplay = document.getElementById('timer');
+    gameState.timerInterval = setInterval(() => {
+        gameState.timeLeft--;
+        
+        // הצגה יפה של הזמן
+        const displaySeconds = gameState.timeLeft < 10 ? `0${gameState.timeLeft}` : gameState.timeLeft;
+        timerDisplay.textContent = `00:${displaySeconds}`;
+        
+        if (gameState.timeLeft <= 0) {
+            loseGame();
+        }
+    }, 1000);
+};
+
+const loseGame = () => {
+    gameState.isGameActive = false; 
+    clearInterval(gameState.timerInterval);
+    document.getElementById('loseModal').style.display = 'flex';
+};
+
+window.onload = initPage;
