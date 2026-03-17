@@ -1,0 +1,42 @@
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Rescue - לוח בקרה</title>
+    
+</head>
+<body>
+    <div id="startModal" class="modal">
+        <div class="modal-content">
+            <h2>מוכנה למשימה? 🚀</h2>
+            <p>עזרי לחללית לפענח את הקוד הסודי.</p>
+            <button id="startGameBtn" class="action-btn">התחל משחק</button>
+        </div>
+    </div>
+
+    <header>
+        <div id="playerInfo">אסטרונאוט/ית: <span id="displayPlayerName">---</span></div>
+        <div id="stats">
+            <div>זמן נותר: <span id="timer">00:00</span></div>
+            <div>ניסיונות: <span id="attempts">0</span></div>
+            <div>שלב: <span id="levelDisplay">1</span></div>
+        </div>
+    </header>
+
+    <main id="gameBoard">
+        <div id="inputArea"></div>
+        <div id="feedbackArea">
+            <h3>היסטוריית פיענוח:</h3>
+            <ul id="historyList"></ul>
+        </div>
+    </main>
+
+    <nav>
+        <a href="instructions.html">הוראות</a> |
+        <a href="../index.html">יציאה</a>
+    </nav>
+
+    <script type="module" src="../scripts/game.js"></script>
+</body>
+</html>
