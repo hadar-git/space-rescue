@@ -15,7 +15,7 @@ let savedLevel = 1;
 
 const initMainPage = () => {
     // הפעלת מוזיקה (מנסה indexMusic קודם כי זה דף הבית)
-    initMusic('indexBackgroundM') || initMusic('gamesM');
+    initMusic('indexMusic') || initMusic('bgMusic');
 
     const form = document.getElementById('loginForm');
     const userInput = document.getElementById('username');

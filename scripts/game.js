@@ -40,7 +40,7 @@ let currentGuess = [];
  * משתמש ב-BOM (URLSearchParams) כדי לדלות נתונים שהועברו מדף הבית.
  */
 const initPage = () => {
-    initMusic('gamesM') || initMusic('indexBackgroundM');
+    initMusic('bgMusic') || initMusic('indexMusic');
 
     const params = new URLSearchParams(window.location.search);
     gameState.playerName = params.get('user') || "אורח";

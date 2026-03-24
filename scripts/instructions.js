@@ -7,7 +7,7 @@ import { initMusic } from './audio.js';
 
 const initInstructionsPage = () => {
     // הפעלת מוזיקה (מנסה את מוזיקת התפריט קודם בדף זה)
-    initMusic('indexBackgroundM') || initMusic('gamesM');
+    initMusic('indexMusic') || initMusic('bgMusic');
 
     // הגדרת הכפתור וחיבור אירוע חזרה
     const backBtn = document.getElementById('backBtn'); // או .backToMenuBtn לפי ה-ID ב-HTML שלך
