@@ -1,0 +1,50 @@
+
+<!DOCTYPE html>
+<html lang="he" dir="rtl">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Space Rescue - דף בית</title>
+    <link rel="icon" type="image/png" href="favicon.png">
+    <link rel="stylesheet" href="styles/style.css">
+</head>
+<body class="home-page">
+    <main class="modal-content">
+        <h2>ברוך הבא, אסטרונאוט! 🚀</h2>
+        
+        <form id="loginForm" autocomplete="off">
+            <div class="input-group">
+                <label for="username">שם השחקן:</label>
+                <input type="text" id="username" required minlength="2" placeholder="הכנס שם...">
+            </div>
+
+            <div id="returningUserArea" class="hidden returning-section">
+                <p id="welcomeBackMsg"></p>
+                <div class="selection-box">
+                    <label>
+                        <input type="radio" name="gameMode" value="continue" checked> המשך מאיפה שעצרתי
+                    </label>
+                    <label>
+                        <input type="radio" name="gameMode" value="new"> התחל מהתחלה
+                    </label>
+                </div>
+            </div>
+
+            <div class="button-container">
+                <button type="submit" id="submitBtn" class="action-btn">בדיקת משתמש</button>
+                <button type="button" id="guestBtn" class="guest-btn">כניסה כאורח</button>
+            </div>
+        </form>
+
+        <nav class="menu-links">
+            <a href="pages/instructions.html">הוראות</a>
+            <a href="pages/records.html">שיאים</a>
+        </nav>
+    </main>
+<footer>
+    <p>© 2026 Space Rescue - פותח על ידי Hadar</p>
+</footer>
+    <audio id="indexMusic" loop src="assets/sounds/indexBackgroundM.mp3"></audio>
+   <script type="module" src="scripts/main.js"></script>
+</body>
+</html>
