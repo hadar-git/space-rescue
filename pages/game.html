@@ -6,52 +6,66 @@
     <title>Space Rescue - לוח בקרה</title>
     <link rel="stylesheet" href="../styles/game.css">
 </head>
-<body>
+<body class="game-page">
 
+    <!-- חלון התחלה -->
     <div id="startModal" class="modal">
         <div class="modal-content">
-            <h2>מוכנה למשימה? 🚀</h2>
-            <p>עזרי לחללית לפענח את הקוד הסודי.</p>
+            <h2>מוכן למשימה? 🚀</h2>
             <button id="startGameBtn" class="action-btn">התחל משחק</button>
         </div>
     </div>
 
+    <!-- אם היה ניצחון אז מופיעי החלון הזה -->
     <div id="winModal" class="modal">
         <div class="modal-content success">
-            <h2>כל הכבוד, אסטרונאוטית! 🏆</h2>
-            <p>הקוד פוצח והחללית ניצלה.</p>
-            <p>מוכנה לאתגר גדול יותר?</p>
-            <button id="nextLevelBtn" class="action-btn">עבור לשלב הבא</button>
+            <h2>ניצחון! 🏆</h2>
+            <p>הקוד פוצח בהצלחה!</p>
+            <div class="modal-buttons">
+                <button id="nextLevelBtn" class="action-btn">עבור לשלב הבא</button>
+                <button class="backToMenuBtn action-btn secondary">חזור לתפריט ראשי</button>
+            </div>
         </div>
     </div>
-
+<!-- אם היה הספד אז מופיע החלון הזה -->
     <div id="loseModal" class="modal">
-        <div class="modal-content danger">
-            <h2>המשימה נכשלה... 🛸</h2>
-            <p>הזמן נגמר והחללית התרחקה.</p>
-            <button id="restartBtn" class="action-btn">נסה שוב</button>
-            <button id="backToMenuBtn" class="action-btn secondary">חזרה לתפריט</button>
+        <div class="modal-content loose">
+            <h2>המשימה נכשלה 💥</h2>
+            <p>הזמן או הניסיונות נגמרו...</p>
+            <div class="modal-buttons">
+                <button id="retryBtn" class="action-btn">נסה שוב</button>
+                <button class="backToMenuBtn action-btn secondary">חזרה לתפריט ראשי</button>
+            </div>
         </div>
     </div>
+<header>
+    <div class="user-panel">
+        <p>אסטרונאוט: <span id="displayPlayerName"></span></p>
+        <p>שיא אישי: שלב <span id="highScoreDisplay">1</span></p> 
+    </div>
+    <div id="stats">
+        <div>זמן: <span id="timer">01:00</span></div>
+        <div>ניסיונות: <span id="attempts">20</span></div>
+        <div>שלב: <span id="levelDisplay">1</span></div>
+    </div>
+</header>
 
-    <header>
-        <div id="playerInfo">אסטרונאוט/ית: <span id="displayPlayerName">---</span></div>
-        <div id="stats">
-            <div class="stat-item">זמן נותר: <span id="timer">00:60</span></div>
-            <div class="stat-item">ניסיונות: <span id="attempts">0</span></div>
-            <div class="stat-item">שלב: <span id="levelDisplay">1</span></div>
-        </div>
-    </header>
 
     <main id="gameBoard">
         <div id="inputArea"></div>
-
+        
         <div id="feedbackArea">
-            <h3>היסטוריית פיענוח:</h3>
+            <h3>היסטוריה:</h3>
             <ul id="historyList"></ul>
         </div>
     </main>
 
+    <footer>
+    <p>© 2026 Space Rescue - פותח על ידי Hadar</p>
+</footer>
+<!-- הוספת אודיו -->
+    <audio id="bgMusic" loop src="../assets/sounds/gamesM.mp3"></audio>
+ 
     <script type="module" src="../scripts/game.js"></script>
 </body>
 </html>
