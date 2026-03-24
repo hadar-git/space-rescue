@@ -1,0 +1,47 @@
+/* 
+  רספונסיביות כללית
+ */
+
+/* מסכים בינוניים (טאבלטים) */
+@media screen and (max-width: 768px) {
+    .modal-content {
+        padding: 25px;
+        width: 95%;
+    }
+
+    #inputArea {
+        grid-template-columns: repeat(4, 1fr); /* 4 כפתורים בשורה */
+        gap: 10px;
+    }
+
+    .num-btn {
+        padding: 15px;
+        font-size: 1.5rem;
+    }
+
+    h2 { font-size: 1.6rem; }
+}
+
+/* טלפונים קטנים */
+@media screen and (max-width: 480px) {
+    #inputArea {
+        grid-template-columns: repeat(3, 1fr); /* 3 כפתורים בשורה */
+    }
+
+    .num-btn {
+        padding: 12px;
+        font-size: 1.2rem;
+    }
+
+    header {
+        flex-direction: column;
+        gap: 10px;
+        text-align: center;
+    }
+
+    .record-row td {
+        padding: 10px;
+        font-size: 0.85rem;
+    }
+}
+
