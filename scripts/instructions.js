@@ -3,26 +3,20 @@
  * @author Hadar
  */
 
-window.onload = () => {
-    const bgMusic = document.getElementById('indexMusic');
-    const backBtn = document.getElementById('backBtn');
+import { initMusic } from './audio.js';
 
-    /**
-     * ניהול מוזיקה בדף ההוראות
-     */
-    if (bgMusic) {
-        bgMusic.play().catch(() => {
-            // האזנה ללחיצה ראשונה אם האוטופליי נחסם
-            window.addEventListener('mousedown', () => {
-                bgMusic.play();
-            }, { once: true });
+const initInstructionsPage = () => {
+    // הפעלת מוזיקה (מנסה את מוזיקת התפריט קודם בדף זה)
+    initMusic('indexBackgroundM') || initMusic('gamesM');
+
+    // הגדרת הכפתור וחיבור אירוע חזרה
+    const backBtn = document.getElementById('backBtn'); // או .backToMenuBtn לפי ה-ID ב-HTML שלך
+    if (backBtn) {
+        backBtn.addEventListener('click', () => {
+            window.location.href = '../index.html';
         });
     }
-
-    /**
-     * חזרה לתפריט הראשי
-     */
-    backBtn?.addEventListener('click', () => {
-        window.location.href = '../index.html';
-    });
 };
+
+// הפעלה בטעינת הדף
+window.onload = initInstructionsPage;

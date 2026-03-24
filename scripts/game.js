@@ -6,6 +6,7 @@
 
 import { randomSecretCode, checkGuess } from './logic.js';
 import { updatePlayerProgress } from './data.js';
+import { initMusic } from './audio.js';
 
 /**
  * @typedef {Object} GameState
@@ -30,20 +31,23 @@ const gameState = {
     isGameActive: false 
 };
 
-const bgMusic = document.getElementById('bgMusic');
+
 let currentGuess = [];
 
-/**
- * אתחול העמוד: טעינת נתוני שחקן, הגדרת כפתורים והכנת התצוגה.
- */
 
+/**
+ * אתחול העמוד: טעינת נתוני שחקן מה-URL, הגדרת מאזינים והכנת התצוגה.
+ * משתמש ב-BOM (URLSearchParams) כדי לדלות נתונים שהועברו מדף הבית.
+ */
 const initPage = () => {
+    initMusic('gamesM') || initMusic('indexBackgroundM');
+
     const params = new URLSearchParams(window.location.search);
     gameState.playerName = params.get('user') || "אורח";
     gameState.currentLevel = parseInt(params.get('level')) || 1;
     
-   // חישוב קושי התחלתי: כל 2 שלבים אורך הקוד עולה ב-1 (מקסימום 10)
-    gameState.difficulty = Math.min(3 + Math.floor((gameState.currentLevel - 1) / 2), 10);
+   // חישוב קושי התחלתי: כל 2 שלבים אורך הקוד עולה ב-1 (מקסימום 6)
+    gameState.difficulty = Math.min(3 + Math.floor((gameState.currentLevel - 1) / 2), 6);
 
     // עדכון תצוגה
     document.getElementById('displayPlayerName').textContent = gameState.playerName;
@@ -56,18 +60,22 @@ const initPage = () => {
     const highScoreElement = document.getElementById('highScoreDisplay');
     if (highScoreElement) highScoreElement.textContent = highScore;
 
+
     // חיבור אירועים לכפתורי התפריט והמודלים
     document.getElementById('startGameBtn')?.addEventListener('click', startGame);
     document.getElementById('nextLevelBtn')?.addEventListener('click', nextLevel);
     document.getElementById('retryBtn')?.addEventListener('click', restartCurrentLevel);
     
-    const backBtns = document.querySelectorAll('.backToMenuBtn');
-    backBtns.forEach(btn => btn.addEventListener('click', () => window.location.href = '../index.html'));
-// האזנה למקלדת להזנת מספרים
+document.querySelectorAll('.backToMenuBtn').forEach(btn => {
+    btn.addEventListener('click', () => window.location.href = '../index.html');
+});
+
+    // האזנה למקלדת להזנת מספרים
     window.addEventListener('keydown', (e) => {
         if (!gameState.isGameActive) return;
         if (e.key >= '0' && e.key <= '9') handleInput(parseInt(e.key));
     });
+
 
     document.getElementById('startModal').style.display = 'flex';
 };
@@ -75,26 +83,21 @@ const initPage = () => {
 /**
  * התחלת שלב חדש: הגרלת קוד, הפעלת טיימר ומוזיקה.
  */
+
+
+
 const startGame = () => {
     document.querySelectorAll('.modal').forEach(m => m.style.display = 'none');
     gameState.isGameActive = true;
-    
-
     gameState.secretCode = randomSecretCode(gameState.difficulty);
     
-  // לוג לבדיקת המפתח (בסביבת פיתוח)
- console.log("הקוד שהוגרל:", gameState.secretCode, "אורך:", gameState.difficulty);
-
-
-                
-    // הפעלת מוזיקה רק אחרי לחיצה (פותר את חסימת הדפדפן)
-    if (bgMusic) {
-        bgMusic.play().catch(err => console.log("אודיו נחסם ע'י דפדפן"));
-    }
+    console.log("Secret Code:", gameState.secretCode); // לצורכי ניפוי שגיאות
 
     renderButtons();
     startTimer();
 };
+
+
 
 /**
  * מעבר לשלב הבא ועדכון רמת הקושי.
@@ -137,33 +140,22 @@ const restartCurrentLevel = () => {
 const stopGameEngine = () => {
     gameState.isGameActive = false;
     clearInterval(gameState.timerInterval);
-    if (bgMusic) bgMusic.pause();
 };
-
 /**
  * טיפול במצב ניצחון: עדכון שיא אישי ושמירה ב-Data.
  */
 const winGame = () => {
     stopGameEngine();
     
-    
+    const reachedLevel = gameState.currentLevel + 1;
+
     if (gameState.playerName !== "אורח") {
-        const statsKey = `stats_${gameState.playerName}`;
-        // שליפת נתונים קיימים או יצירת אובייקט חדש
-        let userStats = JSON.parse(localStorage.getItem(statsKey)) || { highScore: 1 };
-        
-        // אם השלב הנוכחי + 1 גבוה מהשיא הישן - נעדכן
-        const reachedLevel = gameState.currentLevel + 1;
-        if (reachedLevel > userStats.highScore) {
-            userStats.highScore = reachedLevel;
-            localStorage.setItem(statsKey, JSON.stringify(userStats)); // שמירה בזיכרון
-            
-            // עדכון התצוגה על המסך מיד
-            const highScoreElement = document.getElementById('highScoreDisplay');
-            if (highScoreElement) highScoreElement.textContent = reachedLevel;
-        }
-        // שמירת ההתקדמות בזיכרון דרך הקובץ data.js
+        // במקום לכתוב פה לוגיקה של localStorage - משתמשים בפונקציה הקיימת מ-data.js!
         updatePlayerProgress(gameState.playerName, reachedLevel);
+        
+        // עדכון התצוגה על המסך מהנתונים המעודכנים
+        const highScoreElement = document.getElementById('highScoreDisplay');
+        if (highScoreElement) highScoreElement.textContent = reachedLevel;
     }
 
     document.getElementById('winModal').style.display = 'flex';
@@ -180,7 +172,8 @@ const loseGame = () => {
 
 
 /**
- * ניהול ספירה לאחור של הטיימר.
+ * מנהל את הספירה לאחור של השלב.
+ * משתמש ב-setInterval לעדכון ה-DOM בכל שנייה.
  */
 const startTimer = () => {
     if (gameState.timerInterval) clearInterval(gameState.timerInterval);
@@ -193,7 +186,6 @@ const startTimer = () => {
         if (gameState.timeLeft <= 0) loseGame();
     }, 1000);
 };
-
 
 /**
  * עיבוד קלט מהשחקן (מקלדת או כפתורים).
@@ -225,7 +217,6 @@ const processGuess = (guess) => {
     if (result.bulls === gameState.difficulty) winGame();
     else if (gameState.attemptsLeft <= 0) loseGame();
 };
-
 
 /**
  *יצירה דינמית של כפתורי המספרים  

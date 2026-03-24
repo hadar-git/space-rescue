@@ -3,71 +3,69 @@
  * @author Hadar
  */
 import { getPlayerData, updatePlayerProgress } from './data.js';
+import { initMusic } from './audio.js';
 
-const form = document.getElementById('loginForm');
-const userInput = document.getElementById('username');
-const returningArea = document.getElementById('returningUserArea');
-const welcomeMsg = document.getElementById('welcomeBackMsg');
-const submitBtn = document.getElementById('submitBtn');
-const bgMusic = document.getElementById('indexMusic');
 
+// משתנים גלובליים לניהול מצב התחברות
 let isUserVerified = false;
 let savedLevel = 1;
 
-/**
- * ניהול מוזיקת רקע - הפעלה באינטראקציה ראשונה או טעינה
- */
-const handleMusic = () => {
-    if (!bgMusic) return;
-    
-    bgMusic.play().catch(() => {
-        // אם נחסם, נמתין ללחיצה ראשונה של המשתמש
-        window.addEventListener('click', () => {
-            bgMusic.play();
-        }, { once: true });
+
+
+
+const initMainPage = () => {
+    // הפעלת מוזיקה (מנסה indexMusic קודם כי זה דף הבית)
+    initMusic('indexBackgroundM') || initMusic('gamesM');
+
+    const form = document.getElementById('loginForm');
+    const userInput = document.getElementById('username');
+    const returningArea = document.getElementById('returningUserArea');
+    const welcomeMsg = document.getElementById('welcomeBackMsg');
+    const submitBtn = document.getElementById('submitBtn');
+
+    if (!form) return; // הגנה למקרה שהאלמנט לא קיים
+
+    /**
+     * מאזין לשליחת הטופס (אימות משתמש ובחירת שלב)
+     */
+    form.addEventListener('submit', (e) => {
+        e.preventDefault();
+        const name = userInput.value.trim();
+        if (!name) return;
+
+        const player = getPlayerData(name);
+
+        // מקרה 1: משתמש קיים - מציגים בחירת שלב
+        if (player && !isUserVerified) {
+            savedLevel = player.level;
+            welcomeMsg.textContent = `שלום ${name}, המערכת זיהתה שהגעת לשלב ${savedLevel}.`;
+            returningArea.classList.remove('hidden');
+            submitBtn.textContent = "אשר בחירה וצא לדרך";
+            isUserVerified = true;
+            userInput.readOnly = true;
+        } 
+        // מקרה 2: המשתמש כבר זוהה ואישר את הבחירה
+        else if (player && isUserVerified) {
+            const selectedMode = document.querySelector('input[name="gameMode"]:checked')?.value;
+            const targetLevel = (selectedMode === 'new') ? 1 : savedLevel;
+            
+            if (selectedMode === 'new') updatePlayerProgress(name, 1);
+            window.location.href = `./pages/game.html?user=${encodeURIComponent(name)}&level=${targetLevel}`;
+        }
+        // מקרה 3: משתמש חדש
+        else {
+            updatePlayerProgress(name, 1);
+            window.location.href = `./pages/game.html?user=${encodeURIComponent(name)}&level=1`;
+        }
+    });
+
+    /**
+     * כניסה כאורח
+     */
+    document.getElementById('guestBtn')?.addEventListener('click', () => {
+        window.location.href = `./pages/game.html?user=${encodeURIComponent('אורח')}&level=1`;
     });
 };
 
-/**
- * טיפול בשליחת הטופס - זיהוי משתמש קיים או יצירת חדש
- */
-form.addEventListener('submit', (e) => {
-    e.preventDefault();
-    const name = userInput.value.trim();
-    if (!name) return;
-
-    const player = getPlayerData(name);
-
-    // מקרה 1: משתמש קיים - מציגים אפשרות לבחור שלב
-    if (player && !isUserVerified) {
-        savedLevel = player.level;
-        welcomeMsg.textContent = `שלום ${name}, המערכת זיהתה שהגעת לשלב ${savedLevel}.`;
-        returningArea.classList.remove('hidden');
-        submitBtn.textContent = "אשר בחירה וצא לדרך";
-        isUserVerified = true;
-        userInput.readOnly = true;
-    } 
-    // מקרה 2: המשתמש כבר זוהה ואישר את הבחירה
-    else if (player && isUserVerified) {
-        const mode = document.querySelector('input[name="gameMode"]:checked').value;
-        const targetLevel = (mode === 'new') ? 1 : savedLevel;
-        
-        if (mode === 'new') updatePlayerProgress(name, 1);
-        window.location.href = `./pages/game.html?user=${encodeURIComponent(name)}&level=${targetLevel}`;
-    }
-    // מקרה 3: משתמש חדש לגמרי
-    else {
-        updatePlayerProgress(name, 1);
-        window.location.href = `./pages/game.html?user=${encodeURIComponent(name)}&level=1`;
-    }
-});
-
-/**
- * כניסה כאורח (ללא שמירת נתונים)
- */
-document.getElementById('guestBtn').addEventListener('click', () => {
-    window.location.href = `./pages/game.html?user=אורח&level=1`;
-});
-
-// אתחול מוזיקה בטעינה
-handleMusic();
+// הפעלה בטעינה
+window.onload = initMainPage;
