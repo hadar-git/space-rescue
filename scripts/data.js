@@ -1,16 +1,13 @@
-
 /**
  * @fileoverview ניהול זיכרון המשחק ושמירת שיאים ב-LocalStorage
  * @author Hadar
  */
 
 /**
- * מעדכן את התקדמות השחקן ושומר בזיכרון המקומי
- * @param {string} playerName - שם השחקן
- * @param {number} score - השלב אליו השחקן הגיע
- * @throws {Error} במידה ושם השחקן ריק או לא תקין
+ * שליפת נתוני שחקן ספציפי מתוך רשימת השחקנים ב-LocalStorage
+ * @param {string} playerName - שם השחקן לחיפוש
+ * @returns {Object|null} אובייקט נתוני השחקן או null אם לא נמצא
  */
-
  const getPlayerData = (playerName) => {
     // שליפת רשימת כל השחקנים והמרת הטקסט חזרה למערך
     const allPlayers = JSON.parse(localStorage.getItem('allPlayers')) || [];
@@ -28,7 +25,6 @@
  * @param {string} playerName - שם השחקן
  * @param {number} newLevel - השלב אליו השחקן הגיע כעת
  */
-
  const updatePlayerProgress = (playerName, newLevel) => {
     // ניסיון לשלוף נתונים קיימים או יצירת אובייקט חדש אם זה שחקן חדש
     const statsKey = `stats_${playerName}`;
@@ -48,8 +44,9 @@
     updateAllUsersList(userStats);
 };
 
+
 /**
- * עדכון רשימת כל השחקנים בזיכרון המקומי
+ * עדכון הרשימה הכללית של כל השחקנים ב-LocalStorage לצורך הצגה בטבלת שיאים
  * @param {Object} userStats - אובייקט הנתונים המעודכן של השחקן
  */
 const updateAllUsersList = (userStats) => {
@@ -72,3 +69,18 @@ const updateAllUsersList = (userStats) => {
 };
 
 export{getPlayerData,updatePlayerProgress};
+
+
+
+
+    
+
+
+
+
+
+
+
+
+
+

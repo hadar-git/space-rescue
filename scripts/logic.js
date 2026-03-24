@@ -38,25 +38,28 @@
     let bulls = 0;
     let cows = 0;
 
+   // יצירת עותקים כדי לא לדרוס את המערכים המקוריים בזמן הבדיקה
     let tempSecret = [...secretCode];
     let tempGuess = [...userGuess];
 
-
+    //לופ ראשון: זיהוי "בולים"
     tempGuess.forEach((num, i) => {
         if (num === tempSecret[i]) {
             bulls++;
-            tempSecret[i] = null; 
+            tempSecret[i] = null; // סימון כ"תפוס" כדי שלא ייספר כ"פגיעה"
             tempGuess[i] = "used";
+            
         }
     });
 
-
+// לופ שני: זיהוי "פגיעות"
     tempGuess.forEach((num, i) => {
         if (num !== "used") {
             const foundIndex = tempSecret.indexOf(num);
             if (foundIndex !== -1) {
                 cows++;
                 tempSecret[foundIndex] = null; 
+                tempGuess[i] = "used"
             }
         }
     });

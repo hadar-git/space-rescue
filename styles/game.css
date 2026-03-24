@@ -181,7 +181,7 @@ footer {
     box-shadow: 0 0 30px #00ff88; 
 }
 
-.modal-content.danger { 
+.modal-content.loose { 
     border-color: #ff4d4d; 
     box-shadow: 0 0 30px #ff4d4d; 
 }
