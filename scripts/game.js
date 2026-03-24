@@ -5,7 +5,7 @@
  */
 
 import { randomSecretCode, checkGuess } from './logic.js';
-
+import { updatePlayerProgress } from './data.js';
 
 /**
  * @typedef {Object} GameState
@@ -50,7 +50,11 @@ const initPage = () => {
     document.getElementById('attempts').textContent = gameState.attemptsLeft;
     document.getElementById('levelDisplay').textContent = gameState.currentLevel;
 
-   
+    // טעינת שיא אישי מהדפדפן
+    const savedData = JSON.parse(localStorage.getItem(`stats_${gameState.playerName}`));
+    const highScore = savedData ? savedData.highScore : 1;
+    const highScoreElement = document.getElementById('highScoreDisplay');
+    if (highScoreElement) highScoreElement.textContent = highScore;
 
     // חיבור אירועים לכפתורי התפריט והמודלים
     document.getElementById('startGameBtn')?.addEventListener('click', startGame);
@@ -143,6 +147,25 @@ const winGame = () => {
     stopGameEngine();
     
     
+    if (gameState.playerName !== "אורח") {
+        const statsKey = `stats_${gameState.playerName}`;
+        // שליפת נתונים קיימים או יצירת אובייקט חדש
+        let userStats = JSON.parse(localStorage.getItem(statsKey)) || { highScore: 1 };
+        
+        // אם השלב הנוכחי + 1 גבוה מהשיא הישן - נעדכן
+        const reachedLevel = gameState.currentLevel + 1;
+        if (reachedLevel > userStats.highScore) {
+            userStats.highScore = reachedLevel;
+            localStorage.setItem(statsKey, JSON.stringify(userStats)); // שמירה בזיכרון
+            
+            // עדכון התצוגה על המסך מיד
+            const highScoreElement = document.getElementById('highScoreDisplay');
+            if (highScoreElement) highScoreElement.textContent = reachedLevel;
+        }
+        // שמירת ההתקדמות בזיכרון דרך הקובץ data.js
+        updatePlayerProgress(gameState.playerName, reachedLevel);
+    }
+
     document.getElementById('winModal').style.display = 'flex';
 };
 
