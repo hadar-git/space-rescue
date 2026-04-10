@@ -5,13 +5,19 @@
 
 import { initMusic } from './audio.js';
 
+/**
+ * פונקציית האתחול של דף ההוראות
+ */
 const initInstructionsPage = () => {
-    // הפעלת מוזיקה (מנסה את מוזיקת התפריט קודם בדף זה)
+    // הפעלת מוזיקה
     initMusic('indexMusic') || initMusic('bgMusic');
 
     // הגדרת הכפתור וחיבור אירוע חזרה
-    const backBtn = document.getElementById('backBtn'); // או .backToMenuBtn לפי ה-ID ב-HTML שלך
+    const backBtn = document.getElementById('backBtn'); // כפתור חזרה לתפריט ראשי
     if (backBtn) {
+        /**
+         * הוספת אירוע לחיצה (Click) על כפתור החזרה
+         */
         backBtn.addEventListener('click', () => {
             window.location.href = '../index.html';
         });
@@ -19,4 +25,5 @@ const initInstructionsPage = () => {
 };
 
 // הפעלה בטעינת הדף
-window.onload = initInstructionsPage;
+document.addEventListener('DOMContentLoaded', initInstructionsPage);
+//window.onload = initInstructionsPage;

@@ -9,31 +9,35 @@ import { initMusic } from './audio.js';
  * פונקציה המופעלת בטעינת העמוד: מושכת נתונים מה-LocalStorage ובונה את הטבלה
  */
 const initLeaderboard = () => {
-    // --- 1. טיפול במוזיקת רקע (שימוש בפונקציה האחידה מהפרויקט) ---
-    // תחליפי את 'indexMusic' בשם ה-ID האמיתי שיש לך ב-HTML אם הוא שונה
+
     initMusic('indexMusic') || initMusic('bgMusic');
 
-    // --- 2. הגדרת אלמנטים מה-HTML ---
+ // שליפת אלמנטים: שימוש ב-|| מאפשר גמישות במידה ושם ה-ID ב-HTML ישתנה בעתיד.
     const list = document.getElementById('leaderboardBody') || document.getElementById('recordsList');
     const noScoresMessage = document.getElementById('noScoresMessage');
     const table = document.getElementById('highScoresTable');
     
-    // --- 3. שליפת רשימת כל השחקנים מהזיכרון המקומי ---
+    //  שליפת רשימת כל השחקנים מהזיכרון המקומי 
+    // המרת הנתונים מסטרינג למערך אובייקטים. אם אין נתונים, נשתמש במערך ריק.
     const players = JSON.parse(localStorage.getItem('allPlayers')) || [];
     
-    // --- 4. בדיקה: אם אין שחקנים בזיכרון ---
+//הערה: טיפול יפה במצב שאין עדיין נתונים
+// אם המערך ריק מסתירים את הטבלה ומציגים הודעה לשחקן
     if (players.length === 0) {
         if (table) table.style.display = 'none';
         if (noScoresMessage) noScoresMessage.style.display = 'block';
     } else {
-        // --- 5. מיון השחקנים מהגבוה לנמוך ---
+        // מיון השחקנים מהגבוה לנמוך 
+     
         players.sort((a, b) => b.highScore - a.highScore);
 
         if (list) {
+            // ניקוי: חשוב לרוקן את התוכן הקיים כדי שלא ייווצרו כפילויות אם הפונקציה רצה שוב.
             list.innerHTML = ""; 
 
-            // --- 6. בניית שורות הטבלה ---
+          // רנדור (בנייה) של השורות: לולאת forEach עוברת על כל שחקן במערך הממוין.
             players.forEach((player, index) => {
+              // יצירת אלמנטים: אנחנו בונים את השורה והתאים בזיכרון לפני ההזרקה לדף.
                 const row = document.createElement('tr');
                 row.className = "record-row"; 
 
@@ -46,14 +50,17 @@ const initLeaderboard = () => {
                 scoreTd.className = "score-cell";
 
                 // עיצוב שלושת המקומות הראשונים
+                // הוספת מחלקות עיצוב לפי המיקום (index): 0 הוא מקום ראשון, 1 שני וכו'.
+                // זה מאפשר לך לצבוע ב-CSS את המקומות הראשונים בצבעי זהב, כסף וברונזה.
                 if (index === 0) rankTd.classList.add('gold');
                 else if (index === 1) rankTd.classList.add('silver');
                 else if (index === 2) rankTd.classList.add('bronze');
-
+// אבטחה: שימוש ב-textContent מבטיח שהטקסט יוצג כטקסט נקי בלבד.
+                // זה מונע מצב שבו שחקן יקרא לעצמו בשם הכולל קוד זדוני שירוץ בדף.
                 rankTd.textContent = index + 1;
                 nameTd.textContent = player.name;
                 scoreTd.textContent = "שלב : " + player.highScore;
-
+// חיבור האלמנטים: מכניסים את התאים לשורה, ואת השורה לטבלה המרכזית.
                 row.appendChild(rankTd);
                 row.appendChild(nameTd);
                 row.appendChild(scoreTd);
@@ -61,12 +68,12 @@ const initLeaderboard = () => {
             });
         }
     }
-
-    // --- 7. הגדרת כפתור חזרה לתפריט הראשי ---
+// ניווט: שימוש ב-Optional Chaining (?.) מונע קריסה של הקוד במידה וכפתור החזרה לא נמצא בדף
     document.getElementById('backBtn')?.addEventListener('click', () => {
         window.location.href = '../index.html';
     });
 };
 
-// הפעלת האתחול ברגע שהחלון מסיים להיטען
-window.onload = initLeaderboard;
+// הפעלת האתחול: שימוש ב-DOMContentLoaded מבטיח שהקוד ירוץ רק אחרי שה-HTML נטען במלואו.
+
+document.addEventListener('DOMContentLoaded', initLeaderboard);
