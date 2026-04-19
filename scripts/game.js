@@ -6,7 +6,7 @@
 
 import { randomSecretCode, checkGuess } from './logic.js';
 import {getPlayerData, updatePlayerProgress } from './data.js';
-import { initMusic } from './audio.js';
+import { initMusic, playDefaultTheme } from './audio.js';
 
 /**
  * @typedef {Object} GameState
@@ -29,6 +29,7 @@ const gameState = {
     timeLeft: 60,
     timerInterval: null,
     isGameActive: false 
+    
 };
 
 // מערך זמני ששומר את הניחושים
@@ -40,13 +41,14 @@ let currentGuess = [];
  * משתמש ב-BOM (URLSearchParams) כדי לדלות נתונים שהועברו מדף הבית.
  */
 const initPage = () => {
-    initMusic('bgMusic') || initMusic('indexMusic');
-
+  playDefaultTheme();
     const params = new URLSearchParams(window.location.search);
     gameState.playerName = params.get('user') || "אורח";
+
     // מקבל בצורה של סטרינג ולכן הופכים את זה לאינט - parseInt
     gameState.currentLevel = parseInt(params.get('level')) || 1;
-    
+
+
    // חישוב קושי התחלתי: כל 2 שלבים אורך הקוד עולה ב-1 (מקסימום 6)
     gameState.difficulty = Math.min(3 + Math.floor((gameState.currentLevel - 1) / 2), 6);
 
@@ -117,6 +119,8 @@ const startGame = () => {
  * משתמש ב-setInterval לעדכון ה-DOM בכל שנייה.
  */
 const startTimer = () => {
+
+  
     // במידה ויש טיימר כלשהו שעובד אז הוא מנקה אותו כדי שלא יהיה כמה ביחד
     if (gameState.timerInterval)  clearInterval(gameState.timerInterval);
     //מתחיל טיימר
@@ -228,6 +232,7 @@ const stopGameEngine = () => {
  * הפונקציה מאפסת ניסיונות, זמן, ניחוש נוכחי ומנקה את היסטוריית הניחושים על המסך.
  */
 const resetGameState = () => {
+    stopGameEngine();
         // איפוס נתונים 
     gameState.attemptsLeft = 20;
     gameState.timeLeft = 60;
@@ -246,6 +251,7 @@ const resetGameState = () => {
  * מאפסת את נתוני השלב ומתחילה משחק חדש.
  */
 const nextLevel = () => {
+    stopGameEngine();
     gameState.currentLevel++;
     // נוסחה לעליית קושי: כל 2 שלבים נוספת ספרה אחת לקוד (מינימום 3, מקסימום 6)
     gameState.difficulty = Math.min(3 + Math.floor((gameState.currentLevel - 1) / 2), 6);
@@ -271,15 +277,22 @@ const restartCurrentLevel = () => {
 const renderButtons = () => {
     const area = document.getElementById('inputArea'); // מציאת האזור שבו יוצבו הכפתורים
     area.textContent = ""; // ניקוי תוכן קודם כדי למנוע כפילויות של כפתורים
+
     // לולאה ליצירת הכפתורים
     for (let i = 0; i < 10; i++) {
         const btn = document.createElement('button');
         btn.textContent = i;
+       
         btn.classList.add('num-btn');// זה כבר קשור לעיצוב הוספה של CLASS 
+         btn.setAttribute('data-value', i)
         // הצמדת מאזין אירועים: לחיצה על הכפתור תשלח את המספר שלו לפונקציית handleInput
-        btn.addEventListener('click', () => handleInput(i));
-        // כשהכפתור מוכן נוסף ללוח
-        area.appendChild(btn);
+        btn.addEventListener('click', (e) => {
+         
+        console.log("המספר נבחר מתוך: " + e.target.parentElement.id);
+    handleInput(i)
+      
+    });
+      area.appendChild(btn);
     }
 };
 // הגדרת אירוע : ברגע שהחלון סיים להיטען, מפעילים את פונקציית האתחול initPage

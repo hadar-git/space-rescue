@@ -3,7 +3,7 @@
  * @author Hadar
  */
 import { getPlayerData, updatePlayerProgress } from './data.js';
-import { initMusic } from './audio.js';
+import { initMusic,  playDefaultTheme } from './audio.js';
 
 
 // משתנה בוליאני שעוזר לנו לדעת אם כבר זיהינו את המשתמש במערכת
@@ -18,7 +18,7 @@ let savedLevel = 1;
 
 const initMainPage = () => {
 
-    initMusic('indexMusic') || initMusic('bgMusic');
+     playDefaultTheme();
 // שליפת אלמנטים מה-DOM לצורך עדכון ויזואלי וניהול הטופס
     const form = document.getElementById('loginForm');
     const userInput = document.getElementById('username');
@@ -40,7 +40,15 @@ const initMainPage = () => {
 
         // מקרה 1: משתמש קיים - מציגים בחירת שלב
         if (player && !isUserVerified) {
-            savedLevel = player.level;// שמירת השלב השמור מהזיכרון
+
+              savedLevel = player.level;// שמירת השלב השמור מהזיכרון
+              
+            const nextEl = userInput.nextElementSibling;
+        if (nextEl) {
+            nextEl.style.transition = "all 0.5s";
+        }
+
+          
             welcomeMsg.textContent = `שלום ${name}, המערכת זיהתה שהגעת לשלב ${savedLevel}.`;
             // הצגה של איזור נסתר שמאפשר בחירת שלב
             returningArea.classList.remove('hidden');

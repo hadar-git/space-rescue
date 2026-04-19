@@ -3,23 +3,23 @@
  * @author Hadar
  */
 
-import { initMusic } from './audio.js';
+import { initMusic,  playDefaultTheme } from './audio.js';
+import { getAllPlayers } from './data.js';
 
 /**
  * פונקציה המופעלת בטעינת העמוד: מושכת נתונים מה-LocalStorage ובונה את הטבלה
  */
 const initLeaderboard = () => {
 
-    initMusic('indexMusic') || initMusic('bgMusic');
-
+    playDefaultTheme();
  // שליפת אלמנטים: שימוש ב-|| מאפשר גמישות במידה ושם ה-ID ב-HTML ישתנה בעתיד.
     const list = document.getElementById('leaderboardBody') || document.getElementById('recordsList');
     const noScoresMessage = document.getElementById('noScoresMessage');
     const table = document.getElementById('highScoresTable');
     
     //  שליפת רשימת כל השחקנים מהזיכרון המקומי 
-    // המרת הנתונים מסטרינג למערך אובייקטים. אם אין נתונים, נשתמש במערך ריק.
-    const players = JSON.parse(localStorage.getItem('allPlayers')) || [];
+  //מדף DATA 
+    const players = getAllPlayers();
     
 //הערה: טיפול יפה במצב שאין עדיין נתונים
 // אם המערך ריק מסתירים את הטבלה ומציגים הודעה לשחקן
@@ -45,9 +45,7 @@ const initLeaderboard = () => {
                 const nameTd = document.createElement('td');
                 const scoreTd = document.createElement('td');
 
-                rankTd.className = "rank-cell";
-                nameTd.className = "name-cell";
-                scoreTd.className = "score-cell";
+               
 
                 // עיצוב שלושת המקומות הראשונים
                 // הוספת מחלקות עיצוב לפי המיקום (index): 0 הוא מקום ראשון, 1 שני וכו'.
@@ -61,16 +59,22 @@ const initLeaderboard = () => {
                 nameTd.textContent = player.name;
                 scoreTd.textContent = "שלב : " + player.highScore;
 // חיבור האלמנטים: מכניסים את התאים לשורה, ואת השורה לטבלה המרכזית.
-                row.appendChild(rankTd);
-                row.appendChild(nameTd);
-                row.appendChild(scoreTd);
-                list.appendChild(row);
+                    
+            row.appendChild(rankTd);
+            row.appendChild(nameTd);
+            row.appendChild(scoreTd);
+                        
+                
+                row.firstElementChild.style.fontWeight = "bold"; 
+                row.firstElementChild.classList.add('rank-cell');
+
+                  list.appendChild(row);
             });
         }
     }
 // ניווט: שימוש ב-Optional Chaining (?.) מונע קריסה של הקוד במידה וכפתור החזרה לא נמצא בדף
     document.getElementById('backBtn')?.addEventListener('click', () => {
-        window.location.href = '../index.html';
+            window.location.href = '/index.html';
     });
 };
 

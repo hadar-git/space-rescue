@@ -55,10 +55,19 @@ const getAllPlayers = () => JSON.parse(localStorage.getItem('allPlayers')) || []
 
     // שמירה של כל המערך המעודכן חזרה ל-LocalStorage תחת מפתח יחיד
     //וגם ממירים לסטרינג 
+      // המרת הנתונים מסטרינג למערך אובייקטים. אם אין נתונים, נשתמש במערך ריק.
     localStorage.setItem('allPlayers', JSON.stringify(allPlayers));
 };
 
-export{getPlayerData, updatePlayerProgress};
+// חשיפת פונקציית ניקוי לחלונית הקונסול בלבד
+// פשוט כותבים את שם הפונקציה עם () בקונסול וזה מוחק הכל 
+window.resetGameData = () => {
+    localStorage.clear();
+    console.log("הנתונים נמחקו! מרענן את הדף...");
+    location.reload();
+};
+
+export{getPlayerData, updatePlayerProgress, getAllPlayers};
 
 
 

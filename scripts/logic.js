@@ -12,7 +12,7 @@
  * * @param {number} length האורך המבוקש של הקוד
  * @returns {number[]}  (מערך רנדומלי של ספרות (שיכולות לחזור על עצמן
  */
- const randomSecretCode = (length) => {
+ const randomSecretCode = (length = 3) => {
     //מערך ריק של הקוד הרנדומלי שנבחר
     const code = [];
     for (let i = 0; i < length; i++) {
