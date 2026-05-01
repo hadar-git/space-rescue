@@ -41,23 +41,50 @@ let currentGuess = [];
  * משתמש ב-BOM (URLSearchParams) כדי לדלות נתונים שהועברו מדף הבית.
  */
 const initPage = () => {
-  playDefaultTheme();
+    playDefaultTheme();
+   
+    setupGameStateFromURL ()
+
+    updateDisplay()
+    
+    setupEventListeners  ()
+
+    // לפני שמתחיל המשחק קופץ חלון של התחלה
+    document.getElementById('startModal').style.display = 'flex';
+};
+
+/**
+ * שולפת נתוני שחקן ושלב מהכתובת (URL) ומחשבת את רמת הקושי ההתחלתית.
+ * הפונקציה מעדכנת את אובייקט ה-gameState הגלובלי.
+ * 
+ * @example
+ * // במידה וה-URL הוא ?user=Dan&level=3
+ * setupGameStateFromURL(); // gameState.playerName יהיה "Dan"
+ */
+const setupGameStateFromURL = () => {
     const params = new URLSearchParams(window.location.search);
     gameState.playerName = params.get('user') || "אורח";
-
     // מקבל בצורה של סטרינג ולכן הופכים את זה לאינט - parseInt
     gameState.currentLevel = parseInt(params.get('level')) || 1;
-
-
-   // חישוב קושי התחלתי: כל 2 שלבים אורך הקוד עולה ב-1 (מקסימום 6)
+     // חישוב קושי התחלתי: כל 2 שלבים אורך הקוד עולה ב-1 (מקסימום 6)
     gameState.difficulty = Math.min(3 + Math.floor((gameState.currentLevel - 1) / 2), 6);
+    };
 
-    // עדכון תצוגה מעדכנים את השם את השלב את כמות הנסיונות
+/**
+ * מעדכנת את כל רכיבי הממשק (DOM) בדף לפי הנתונים הנוכחיים ב-gameState.
+ * כולל שם שחקן, ניסיונות, שלב נוכחי ושליפת שיא אישי מהזיכרון המקומי.
+ * 
+ * @returns {void}
+ */
+  const  updateDisplay=()=>{
+         
+          // עדכון תצוגה מעדכנים את השם את השלב את כמות הנסיונות
     document.getElementById('displayPlayerName').textContent = gameState.playerName;
     document.getElementById('attempts').textContent = gameState.attemptsLeft;
     document.getElementById('levelDisplay').textContent = gameState.currentLevel;
 
-
+    
+  
 // קריאה לפונקציה מ-data.js שמחפשת את נתוני השחקן הנוכחי בזיכרון המקומי
 const savedData = getPlayerData(gameState.playerName);
 
@@ -73,7 +100,17 @@ if (highScoreElement) {
     highScoreElement.textContent = highScore; // הצגת השיא על גבי המסך
 }
 
-    // חיבור אירועים לכפתורי התפריט והמודלים
+    };
+
+/**
+ * מחברת מאזיני אירועים (Event Listeners) לכפתורי התפריט, למודלים ולמקלדת.
+ * כולל טיפול בכפתורי ניווט, התחלת משחק והזנת ניחושים מהמקלדת.
+ * 
+ * @listens window#keydown - מאזין להקשות מספרים במקלדת לצורך הזנת ניחוש.
+ * @listens click - מאזין ללחיצות על כפתורי התחלה, חזרה וניסיון חוזר.
+ */
+    const setupEventListeners = () => {
+        // חיבור אירועים לכפתורי התפריט והמודלים
     // אם הוא לא מוצא הוא פשוט לא עושה כלום
     document.getElementById('startGameBtn')?.addEventListener('click', startGame);
     document.getElementById('nextLevelBtn')?.addEventListener('click', nextLevel);
@@ -92,10 +129,7 @@ if (highScoreElement) {
         if (e.key >= '0' && e.key <= '9') handleInput(parseInt(e.key));
     });
 
-// לפני שמתחיל המשחק קופץ חלון של התחלה
-    document.getElementById('startModal').style.display = 'flex';
-};
-
+}
 
 /**
  * התחלת שלב חדש: הגרלת קוד, הפעלת טיימר ומוזיקה.
@@ -191,10 +225,6 @@ const winGame = () => {
 // אם זה לא אורח אז שומרים את ההשיג שלו בזיכרון המקומי
     if (gameState.playerName !== "אורח") {
         updatePlayerProgress(gameState.playerName, reachedLevel);
-// לאחר שעדכנו את הזיכרון (updatePlayerProgress), אנחנו מושכים את הנתונים המעודכנים
-// זה מבטיח שאנחנו מציגים את ה"מקור האמיתי" מה-LocalStorage
-const updatedData = getPlayerData(gameState.playerName);
-
 // תפיסת האלמנט של השיא האישי לצורך עדכון ויזואלי
 const highScoreElement = document.getElementById('highScoreDisplay');
 
@@ -218,7 +248,7 @@ const loseGame = () => {
 };
 
 /**
- * עצירת מנוע המשחק (טיימר ומוזיקה).
+ * עצירת מנוע המשחק (טיימר).
  */
 const stopGameEngine = () => {
     gameState.isGameActive = false;
@@ -288,7 +318,6 @@ const renderButtons = () => {
         // הצמדת מאזין אירועים: לחיצה על הכפתור תשלח את המספר שלו לפונקציית handleInput
         btn.addEventListener('click', (e) => {
          
-        console.log("המספר נבחר מתוך: " + e.target.parentElement.id);
     handleInput(i)
       
     });

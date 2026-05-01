@@ -43,6 +43,7 @@ const initMainPage = () => {
 
               savedLevel = player.level;// שמירת השלב השמור מהזיכרון
               
+              // קשור לעיצוב
             const nextEl = userInput.nextElementSibling;
         if (nextEl) {
             nextEl.style.transition = "all 0.5s";
