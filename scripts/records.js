@@ -69,22 +69,18 @@ const initLeaderboard = () => {
         // ייעול: שימוש ב-Fragment (בנייה בזיכרון במקום ב-DOM)
     const fragment = document.createDocumentFragment();
      if (list) {
-            // ניקוי: חשוב לרוקן את התוכן הקיים כדי שלא ייווצרו כפילויות אם הפונקציה רצה שוב.
+        // ניקוי בטוח: כל עוד יש לטבלה ילד (שורה), אנחנו מסירים אותו
+    while (list.firstChild) {
+        list.removeChild(list.firstChild);
+    }
+
+    // הזרקת הנתונים החדשים
     players.forEach((player, index) => {
         fragment.appendChild(createRow(player, index));
-       })
-    list.innerHTML = ""; // ניקוי אחרון
-    list.appendChild(fragment); // הזרקה אחת ויחידה למסך
+    });
 
-            }
-           
-// ניווט: שימוש ב-Optional Chaining (?.) מונע קריסה של הקוד במידה וכפתור החזרה לא נמצא בדף
-    document.getElementById('backBtn')?.addEventListener('click', () => {
-            window.location.href = '/index.html';
-    })
-  
-
-
+    list.appendChild(fragment);
+}
 }
 
 // הפעלת האתחול: שימוש ב-DOMContentLoaded מבטיח שהקוד ירוץ רק אחרי שה-HTML נטען במלואו.
