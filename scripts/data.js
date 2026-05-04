@@ -16,11 +16,9 @@ const getAllPlayers = () => JSON.parse(localStorage.getItem('allPlayers')) || []
  */
 
  const getPlayerData = (playerName) => {
- // שליפת רשימת כל השחקנים בעזרת פונקציית העזר
+
     const allPlayers = getAllPlayers();
-// חיפוש השחקן הספציפי במערך לפי השם
     const player = allPlayers.find(p => p.name === playerName);
-    // אם נמצא שחקן מחזירים את האוביקט שלו 
     if (player) return { name: player.name, level: player.highScore };
     return null;
 };
@@ -46,17 +44,16 @@ const getAllPlayers = () => JSON.parse(localStorage.getItem('allPlayers')) || []
         player.lastPlayed = new Date().toLocaleDateString();
     } else {
         // אם זה שחקן חדש: ניצור אובייקט חדש ונוסיף אותו למערך
-        allPlayers.push({
+        player= {
             name: playerName,
             highScore: newLevel,
             lastPlayed: new Date().toLocaleDateString()
-        });
+        };
+        allPlayers.push(player)
     }
 
-    // שמירה של כל המערך המעודכן חזרה ל-LocalStorage תחת מפתח יחיד
-    //וגם ממירים לסטרינג 
-      // המרת הנתונים מסטרינג למערך אובייקטים. אם אין נתונים, נשתמש במערך ריק.
     localStorage.setItem('allPlayers', JSON.stringify(allPlayers));
+    return player
 };
 
 // חשיפת פונקציית ניקוי לחלונית הקונסול בלבד

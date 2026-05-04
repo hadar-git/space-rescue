@@ -10,11 +10,11 @@
  * @param {string} audioId - ה-ID של אלמנט ה-audio ב-HTML
  */
  const initMusic = (audioId) => {
-   // שליפת האודיו המתאים מהdom לפי הID שקיבלתי
+
     const music = document.getElementById(audioId);
-    //אם לא התקבל כלום  בדיקה כדי למנוע שגיאות 
+   
     if (!music) return false;
-// אם כן 
+
     const startPlaying = () => {
         //מפעילים את המוזיקה אבל לא תמיד הדפדפן נותן את האפשרות הזו לכן יש את CATCH שתפעיל אותו
         music.play().catch(() => {
@@ -29,7 +29,6 @@
 };
 
  const playDefaultTheme = () => {
-    // מנסה קודם את מוזיקת המשחק, אם לא נמצא מנסה את מוזיקת התפריט
     return initMusic('bgMusic') || initMusic('indexMusic');
 };
 

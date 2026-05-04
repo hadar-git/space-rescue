@@ -13,10 +13,9 @@
  * @returns {number[]}  (מערך רנדומלי של ספרות (שיכולות לחזור על עצמן
  */
  const randomSecretCode = (length = 3) => {
-    //מערך ריק של הקוד הרנדומלי שנבחר
     const code = [];
     for (let i = 0; i < length; i++) {
-        code.push(Math.floor(Math.random() * 10)); // מספרים 0-9
+        code.push(Math.floor(Math.random() * 10)); 
     }
     return code;
 };
@@ -36,36 +35,28 @@
 
 
  const checkGuess = (secretCode, userGuess) => {
-    let bulls = 0; // מונה לספרות נכונות במקום הנכון
-    let cows = 0; // מונה לספרות נכונות במקום הלא נכון
+    let bulls = 0;
+    let cows = 0; 
 
-   // יצירת עותקים כדי לא לדרוס את המערכים המקוריים בזמן הבדיקה
     let tempSecret = [...secretCode];
     let tempGuess = [...userGuess];
 
-    //לופ ראשון: זיהוי בולים
     tempGuess.forEach((num, i) => {
         if (num === tempSecret[i]) {
             bulls++;
-            tempSecret[i] = null; // סימון כ"תפוס" כדי שלא ייספר כפגיעה
+            tempSecret[i] = null;
             tempGuess[i] = "used";
             
         }
-    });
-
-// לופ שני: זיהוי פגיעות
-    tempGuess.forEach((num, i) => {
-        if (num !== "used") {
-            // בודקים על כל אחת מהספרות שנשארה במערך הניחושים אם היא נמצאת איפשהו בקוד 
+        else {
             const foundIndex = tempSecret.indexOf(num);
-            if (foundIndex !== -1) { // חוזר האינדקס אם נמצא
+             if (foundIndex !== -1) { 
                 cows++;
                 tempSecret[foundIndex] = null; 
                 tempGuess[i] = "used"
             }
         }
     });
-//חוזר אוביקט עם התוצאות הסופיות
     return { bulls, cows };
 };
 
