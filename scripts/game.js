@@ -93,7 +93,7 @@ const levelFromURL = params.get('level');
     
   const savedData = getPlayerData(gameState.playerName);
 
-const highScore = savedData ? savedData.level : 1;
+const highScore = savedData ? savedData.level : 0;
 
 const highScoreElement = document.getElementById('highScoreDisplay');
 
@@ -211,14 +211,14 @@ const processGuess = (guess) => {
  */
 const winGame = () => {
     stopGameEngine(); 
-     gameState.currentLevel++
+     
     if (gameState.playerName !== "אורח") {
-        updatePlayerProgress(gameState.playerName, gameState.currentLevel-1);
+        updatePlayerProgress(gameState.playerName, gameState.currentLevel);
     }
 const highScoreElement = document.getElementById('highScoreDisplay');
 if (highScoreElement) {
 
-    highScoreElement.textContent = gameState.currentLevel-1
+    highScoreElement.textContent = gameState.currentLevel
 }
     
 
@@ -268,7 +268,7 @@ const resetGameState = () => {
  */
 const nextLevel = () => {
     stopGameEngine();
-
+gameState.currentLevel++
     gameState.difficulty = Math.min(3 + Math.floor((gameState.currentLevel - 1) / 2), 6);
     
     resetGameState(); 

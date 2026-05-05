@@ -40,7 +40,7 @@ const initMainPage = () => {
 
 
           if(!player) {
-          const newP=  updatePlayerProgress(name, 1);
+          const newP=  updatePlayerProgress(name, 0);
             sessionStorage.setItem('playerData',JSON.stringify(newP))
 
             window.location.href = `./pages/game.html?level=1`;
