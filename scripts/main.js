@@ -66,7 +66,7 @@ const initMainPage = () => {
             const selectedMode = document.querySelector('input[name="gameMode"]:checked')?.value;
 
             const targetLevel = (selectedMode === 'new') ? 1 : savedLevel;
-            const PD={name: name, score: savedLevel, mode: selectedMode}
+            const PD={name: name, highScore: savedLevel}
            sessionStorage.setItem('playerData', JSON.stringify(PD))
     
             // מעבר לדף המשחק עם שליחת הפרמטרים ב-URL (שימוש ב-encodeURIComponent לטיפול בעברית/תווים מיוחדים)
@@ -80,7 +80,8 @@ const initMainPage = () => {
      * כניסה כאורח
      */
     document.getElementById('guestBtn')?.addEventListener('click', () => {
-        window.location.href = `./pages/game.html?user=${encodeURIComponent('אורח')}&level=1`;
+        sessionStorage.removeItem('playerData');
+        window.location.href = `./pages/game.html?level=1`;
     });
 };
 document.addEventListener('DOMContentLoaded', initMainPage);

@@ -63,14 +63,19 @@ const setupGameStateFromURLANDST = () => {
     const params = new URLSearchParams(window.location.search);
    if (rawData) {
     const pd = JSON.parse(rawData);
-    gameState.playerName = pd.name;
+    gameState.playerName = pd.name || "אורח";
+    gameState.highScore = pd.highScore || 0;
     } else {
-        gameState.playerName = params.get('user') || "אורח";
+     // const nameFromURL = params.get('user');
+        gameState.playerName =  "אורח";
+        gameState.highScore = 0;
         }
-    // מקבל בצורה של סטרינג ולכן הופכים את זה לאינט - parseInt
 
-    gameState.currentLevel = parseInt(params.get('level')) || 1;
-    gameState.difficulty = Math.min(3 + Math.floor((gameState.currentLevel - 1) / 2), 6);
+
+const levelFromURL = params.get('level');
+    gameState.currentLevel = parseInt(levelFromURL) || 1;
+ gameState.difficulty = Math.min(3 + Math.floor((gameState.currentLevel - 1) / 2), 6);
+   
 };
 
 
@@ -206,17 +211,16 @@ const processGuess = (guess) => {
  */
 const winGame = () => {
     stopGameEngine(); 
-    const reachedLevel = gameState.currentLevel + 1;
-
+     gameState.currentLevel++
     if (gameState.playerName !== "אורח") {
-        updatePlayerProgress(gameState.playerName, reachedLevel);
-
+        updatePlayerProgress(gameState.playerName, gameState.currentLevel-1);
+    }
 const highScoreElement = document.getElementById('highScoreDisplay');
 if (highScoreElement) {
 
-    highScoreElement.textContent = gameState.currentLevel
+    highScoreElement.textContent = gameState.currentLevel-1
 }
-    }
+    
 
     document.getElementById('winModal').style.display = 'flex';
 };
@@ -264,7 +268,7 @@ const resetGameState = () => {
  */
 const nextLevel = () => {
     stopGameEngine();
-    gameState.currentLevel++;
+
     gameState.difficulty = Math.min(3 + Math.floor((gameState.currentLevel - 1) / 2), 6);
     
     resetGameState(); 
