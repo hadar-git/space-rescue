@@ -79,8 +79,10 @@ const initMainPage = () => {
     /**
      * כניסה כאורח
      */
-    document.getElementById('guestBtn')?.addEventListener('click', () => {
+    document.getElementById('guestBtn')?.addEventListener('click', (e) => {
+        e.preventDefault()
         sessionStorage.removeItem('playerData');
+        console.log("ניקוי נתונים ומעבר כאורח...");
         window.location.href = `./pages/game.html?level=1`;
     });
 };
