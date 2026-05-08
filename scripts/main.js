@@ -43,7 +43,7 @@ const initMainPage = () => {
           const newP=  updatePlayerProgress(name, 0);
             sessionStorage.setItem('playerData',JSON.stringify(newP))
 
-            window.location.href = `./pages/game.html?level=1`;
+            window.location.href = `./pages/script.html?level=1`;
         }
 // אם המשתמש שלי קיים אבל עדיין לא זוהה
         else if(!isUserVerified) {
@@ -70,7 +70,7 @@ const initMainPage = () => {
            sessionStorage.setItem('playerData', JSON.stringify(PD))
     
             // מעבר לדף המשחק עם שליחת הפרמטרים ב-URL (שימוש ב-encodeURIComponent לטיפול בעברית/תווים מיוחדים)
-            window.location.href = `./pages/game.html?level=${targetLevel}`;
+            window.location.href = `./pages/script.html?level=${targetLevel}`;
         }
      
      
@@ -83,7 +83,7 @@ const initMainPage = () => {
         e.preventDefault()
         sessionStorage.removeItem('playerData');
         console.log("ניקוי נתונים ומעבר כאורח...");
-        window.location.href = `./pages/game.html?level=1`;
+        window.location.href = `./pages/script.html?level=1`;
     });
 };
 document.addEventListener('DOMContentLoaded', initMainPage);

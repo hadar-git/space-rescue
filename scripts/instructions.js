@@ -11,16 +11,5 @@ import { initMusic,  playDefaultTheme } from './audio.js';
 const initInstructionsPage = () => {
 
    playDefaultTheme();
-
-    // const backBtn = document.getElementById('backBtn'); 
-    // if (backBtn) {
-    //     /**
-    //      * הוספת אירוע לחיצה (Click) על כפתור החזרה
-    //      */
-    //     backBtn.addEventListener('click', () => {
-    //      window.location.href = '/index.html';
-
-    //     });
-    // }
 };
 document.addEventListener('DOMContentLoaded', initInstructionsPage);
